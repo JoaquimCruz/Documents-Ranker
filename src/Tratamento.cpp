@@ -10,6 +10,30 @@ bool isStopWord(const std::string& word, const std::string stopWords[], int size
     return false; 
 }
 
+std :: vector<std :: string> LeituraDocumentos(const std::string& filePath){
+
+    std :: ifstream Doc1(filePath);
+    std :: vector<std :: string> words;
+    std :: string line, word; 
+
+    if(!Doc1){
+        std :: cerr << "Error!" << std :: endl;
+    }
+
+    while(std :: getline(Doc1, line)){
+        std :: istringstream iss(line);
+
+        while(iss >> word){
+            words.emplace_back(word);
+        }
+    }
+
+    Doc1.close();
+
+    return words;
+
+
+}
 std :: vector < std :: string > TratamentoDoTexto(std :: vector < std :: string > words){
 
     std :: ifstream StopWords("Documents/stopwords.txt");
@@ -54,4 +78,17 @@ std :: vector < std :: string > TratamentoDoTexto(std :: vector < std :: string 
 
     return words;
 
+}
+
+void FrequenciaPalavras(std :: vector < std :: string >& words){
+
+    std :: unordered_map<std :: string, int> wordCount;
+
+    for(const auto& w : words){
+        wordCount[w]++; 
+    }
+
+    for(const auto& aux : wordCount){
+        std :: cout << "Palavra: " << aux.first << "\tFrequencia: " << aux.second << std :: endl;
+    }
 }
