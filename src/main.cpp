@@ -1,17 +1,10 @@
 #include "Tratamento.hpp"
 
-int main(){
 
-    std::string path = "Documents/A mão e a luva.txt";
-    std :: vector<std :: string> words;
+int main(){ // não tá do jeito mais otimizado, mas paciência.
 
-
-    words = LeituraDocumentos(path);
-    words = TratamentoDoTexto(words);
-
-    FrequenciaPalavras(words);
-
-
+    ChamamentoDeFunções();
+    
     return 0;
 
 }
