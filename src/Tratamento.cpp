@@ -98,7 +98,7 @@ std :: unordered_map<std :: string, int> FrequenciaPalavras(std :: vector < std 
 double calculaTFIDF(const std :: unordered_map<std :: string, int>& frequencias, const std :: vector<std :: string>& PalavrasFrases,
                     const std :: unordered_map < std :: string, int >& DF, int totalLivros){
 
-    double totalIFIDF = 0.0, Idf = 0.0;
+    double totalTFIDF = 0.0, Idf = 0.0;
     int Tf = 0, Df = 0;
 
     for(const auto& w : PalavrasFrases){
@@ -108,24 +108,24 @@ double calculaTFIDF(const std :: unordered_map<std :: string, int>& frequencias,
             Tf = aux -> second;
             Df = DF.at(w);
             Idf = std::log(static_cast<double>(totalLivros) / (1 + Df));
-            totalIFIDF += Tf * Idf;
+            totalTFIDF += Tf * Idf;
             
         }
     }
 
-    return totalIFIDF;
+    return totalTFIDF;
 }
 
 void ChamamentoDeFunções(){
 
     std :: string path = "Documents/A mão e a luva.txt";
     std :: string path2 = "Documents/biblia.txt";
-    std :: string path3 = "Documents/DomCasmurro.txt";
+    //std :: string path3 = "Documents/DomCasmurro.txt";
     //std :: string path4 = "Documents/quincas borda.txt";
     //std :: string path5 = "Documents/Semana_Machado_Assis.txt";
     //std :: string path6 = "Documents/terremoto.txt";
     std :: string frasesPath = "Documents/frases.txt"; 
-    int totalLivros = 3;
+    int totalLivros = 2;
 
 
     std :: vector<std :: string> words1, words2, words3, words4, words5, words6;
@@ -142,9 +142,9 @@ void ChamamentoDeFunções(){
     words2 = TratamentoDoTexto(words2);
     Frequencia2 = FrequenciaPalavras(words2);
 
-    words3 = LeituraDocumentos(path3);
-    words3 = TratamentoDoTexto(words3);
-    Frequencia3 = FrequenciaPalavras(words3);
+    //words3 = LeituraDocumentos(path3);
+    //words3 = TratamentoDoTexto(words3);
+    //Frequencia3 = FrequenciaPalavras(words3);
 
     //words4 = LeituraDocumentos(path4);
     //words4 = TratamentoDoTexto(words4);
@@ -161,9 +161,9 @@ void ChamamentoDeFunções(){
     palavrasFrases = LeituraDocumentos(frasesPath);
     palavrasFrases = TratamentoDoTexto(palavrasFrases);
 
-    for (const auto& [word, _] : Frequencia1) DF[word]++;
+    for (const auto& [word, _] : Frequencia1) DF[word]++; 
     for (const auto& [word, _] : Frequencia2) DF[word]++;
-    for (const auto& [word, _] : Frequencia3) DF[word]++;
+    //for (const auto& [word, _] : Frequencia3) DF[word]++;
 
     double tfidfLivro1 = calculaTFIDF(Frequencia1, palavrasFrases, DF, totalLivros);
     double tfidfLivro2 = calculaTFIDF(Frequencia2, palavrasFrases, DF, totalLivros);
