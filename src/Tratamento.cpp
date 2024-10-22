@@ -1,6 +1,8 @@
 #include "Tratamento.hpp"
 
 
+
+
 bool isStopWord(const std::string& word, const std::string stopWords[], int size) {
     for (int i = 0; i < size; ++i) {
         if (word == stopWords[i]) {
@@ -10,29 +12,38 @@ bool isStopWord(const std::string& word, const std::string stopWords[], int size
     return false; 
 }
 
-std :: vector<std :: string> LeituraDocumentos(const std::string& filePath){
+std::vector<std::string> LeituraDocumentos1(const std::string& filePath) {
+    std::ifstream Doc(filePath);
+    std::vector<std::string> words;
+    std::string line, word;
 
-    std :: ifstream Doc1(filePath);
-    std :: vector<std :: string> words;
-    std :: string line, word; 
-
-    if(!Doc1){
-        std :: cerr << "Error!" << std :: endl;
+    if (!Doc) {
+        std::cerr << "Error ao abrir o arquivo: " << filePath << std::endl;
+        return words;
     }
 
-    while(std :: getline(Doc1, line)){
-        std :: istringstream iss(line);
-
-        while(iss >> word){
+    while (std::getline(Doc, line)) {
+        std::istringstream iss(line);
+        while (iss >> word) {
             words.emplace_back(word);
         }
     }
 
-    Doc1.close();
+    Doc.close();
+    return words;
+}
+std::vector<std::string> LeituraDocumentos(std::istringstream& stream) {
+    std::vector<std::string> words;
+    std::string line, word;
+
+    while (std::getline(stream, line)) {
+        std::istringstream iss(line);
+        while (iss >> word) {
+            words.emplace_back(word);
+        }
+    }
 
     return words;
-
-
 }
 std :: vector < std :: string > TratamentoDoTexto(std :: vector < std :: string > words){
 
@@ -88,9 +99,6 @@ std :: unordered_map<std :: string, int> FrequenciaPalavras(std :: vector < std 
         wordCount[w]++; 
     }
 
-    /*for(const auto& aux : wordCount){
-        std :: cout << "Palavra: " << aux.first << "\tFrequencia: " << aux.second << std :: endl;
-    }*/
 
     return wordCount;
 }
@@ -98,16 +106,17 @@ std :: unordered_map<std :: string, int> FrequenciaPalavras(std :: vector < std 
 double calculaTFIDF(const std :: unordered_map<std :: string, int>& frequencias, const std :: vector<std :: string>& PalavrasFrases,
                     const std :: unordered_map < std :: string, int >& DF, int totalLivros){
 
-    double totalTFIDF = 0.0, Idf = 0.0;
-    int Tf = 0, Df = 0;
+    double totalTFIDF = 0.0, Idf = 0.0, Tf = 0.0;
+    int Df = 0;
 
     for(const auto& w : PalavrasFrases){
         auto aux = frequencias.find(w);
 
         if(aux != frequencias.end()){
             Tf = aux -> second;
+            Tf = Tf/frequencias.size();
             Df = DF.at(w);
-            Idf = std::log(static_cast<double>(totalLivros) / (1 + Df));
+            Idf = std::log(static_cast<double>( 1+ totalLivros) / (1 + Df) + 1);
             totalTFIDF += Tf * Idf;
             
         }
@@ -116,62 +125,91 @@ double calculaTFIDF(const std :: unordered_map<std :: string, int>& frequencias,
     return totalTFIDF;
 }
 
-void ChamamentoDeFunções(){
 
-    std :: string path = "Documents/A mão e a luva.txt";
-    std :: string path2 = "Documents/biblia.txt";
-    //std :: string path3 = "Documents/DomCasmurro.txt";
-    //std :: string path4 = "Documents/quincas borda.txt";
-    //std :: string path5 = "Documents/Semana_Machado_Assis.txt";
-    //std :: string path6 = "Documents/terremoto.txt";
-    std :: string frasesPath = "Documents/frases.txt"; 
-    int totalLivros = 2;
+void troca(std::pair<std::string, double>& a, std::pair<std::string, double>& b) {
+    std::pair<std::string, double> temp = a;
+    a = b;
+    b = temp;
+}
 
+int particiona(std::vector<std::pair<std::string, double>>& documentos, int inicio, int fim) {
+    double pivô = documentos[fim].second;
+    int i = inicio - 1;
 
-    std :: vector<std :: string> words1, words2, words3, words4, words5, words6;
-    std :: unordered_map<std :: string, int> Frequencia1,Frequencia2,Frequencia3,Frequencia4,Frequencia5,Frequencia6;
-    std :: vector<std::string> palavrasFrases;
-    std :: unordered_map<std::string, int> DF;
+    for (int j = inicio; j < fim; ++j) {
+        if (documentos[j].second > pivô) { 
+            i++;
+            troca(documentos[i], documentos[j]);
+        }
+    }
+    troca(documentos[i + 1], documentos[fim]);
+    return i + 1;
+}
 
+void quickSort(std::vector<std::pair<std::string, double>>& documentos, int inicio, int fim) {
+    if (inicio < fim) {
+        int pi = particiona(documentos, inicio, fim);
+        quickSort(documentos, inicio, pi - 1);
+        quickSort(documentos, pi + 1, fim);
+    }
+}
 
-    words1 = LeituraDocumentos(path);
+void RanqueamentoDocumentos(std::vector<std::pair<std::string, double>>& documentosTFIDF) {
+    quickSort(documentosTFIDF, 0, documentosTFIDF.size() - 1);
+
+    std::cout << "Documentos ranqueados por relevância (TF-IDF):" << std::endl;
+    for (const auto& doc : documentosTFIDF) {
+        std::cout << "Documento: " << doc.first << " - TF-IDF total: " << doc.second << std::endl;
+    }
+}
+
+void ChamamentoDeFuncoes(BancoDeDados& banco) {
+    std::string titulo1 = "Orgulho e Preconceito";
+    std::string titulo2 = "Moby Dick";
+    // Outros títulos podem ser buscados da mesma forma
+
+    std::string conteudoLivro1 = banco.buscarLivro(titulo1);
+    std::string conteudoLivro2 = banco.buscarLivro(titulo2);
+
+    if (conteudoLivro1.empty() || conteudoLivro2.empty()) {
+        std::cerr << "Erro: Um ou mais livros não encontrados no banco de dados!" << std::endl;
+        return;
+    }
+
+    std::string frasesPath = "Documents/frases.txt"; 
+    int totalLivros = 2; // Atualize conforme o número de livros que você vai considerar
+
+    // Processar o conteúdo dos livros
+    std::istringstream stream1(conteudoLivro1);
+    std::istringstream stream2(conteudoLivro2);
+
+    std::vector<std::string> words1, words2;
+    std::unordered_map<std::string, int> Frequencia1, Frequencia2;
+    std::vector<std::string> palavrasFrases;
+    std::unordered_map<std::string, int> DF;
+    std::vector<std::pair<std::string, double>> documentosTFIDF;
+
+    words1 = LeituraDocumentos(stream1);  // Modificar para aceitar um stream
     words1 = TratamentoDoTexto(words1);
     Frequencia1 = FrequenciaPalavras(words1);
 
-    words2 = LeituraDocumentos(path2);
+    words2 = LeituraDocumentos(stream2);  // Modificar para aceitar um stream
     words2 = TratamentoDoTexto(words2);
     Frequencia2 = FrequenciaPalavras(words2);
 
-    //words3 = LeituraDocumentos(path3);
-    //words3 = TratamentoDoTexto(words3);
-    //Frequencia3 = FrequenciaPalavras(words3);
-
-    //words4 = LeituraDocumentos(path4);
-    //words4 = TratamentoDoTexto(words4);
-    //Frequencia4 = FrequenciaPalavras(words4);
-
-    //words5 = LeituraDocumentos(path5);
-    //words5 = TratamentoDoTexto(words5);
-    //Frequencia5 = FrequenciaPalavras(words5);
-
-    //words6 = LeituraDocumentos(path6);
-    //words6 = TratamentoDoTexto(words6);
-    //Frequencia6 = FrequenciaPalavras(words6);
-
-    palavrasFrases = LeituraDocumentos(frasesPath);
+    palavrasFrases = LeituraDocumentos1(frasesPath);  // Ainda usando frases de arquivo
     palavrasFrases = TratamentoDoTexto(palavrasFrases);
 
-    for (const auto& [word, _] : Frequencia1) DF[word]++; 
+    // Atualizar DF (Document Frequency)
+    for (const auto& [word, _] : Frequencia1) DF[word]++;
     for (const auto& [word, _] : Frequencia2) DF[word]++;
-    //for (const auto& [word, _] : Frequencia3) DF[word]++;
 
     double tfidfLivro1 = calculaTFIDF(Frequencia1, palavrasFrases, DF, totalLivros);
     double tfidfLivro2 = calculaTFIDF(Frequencia2, palavrasFrases, DF, totalLivros);
-    double tfidfLivro3 = calculaTFIDF(Frequencia3, palavrasFrases, DF, totalLivros);
 
-    std::cout << "TF-IDF total no Livro 1: " << tfidfLivro1 << std::endl;
-    std::cout << "TF-IDF total no Livro 2: " << tfidfLivro2 << std::endl;
-    std::cout << "TF-IDF total no Livro 3: " << tfidfLivro3 << std::endl;
-   
-    
+    documentosTFIDF.push_back({"Orgulho e Preconceito", tfidfLivro1});
+    documentosTFIDF.push_back({"Moby Dick", tfidfLivro2});
+
+    RanqueamentoDocumentos(documentosTFIDF);
 }
+
