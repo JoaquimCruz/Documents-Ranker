@@ -11,7 +11,7 @@ bool isStopWord(const std::string& word, const std::string stopWords[], int size
 std :: unordered_map<std :: string, int> FrequenciaPalavras(std :: vector < std :: string >& words);
 double calculaTFIDF(const std :: unordered_map<std :: string, int>& frequencias, const std :: vector<std :: string>& PalavrasFrases,
                     const std :: unordered_map < std :: string, int >& DF, int totalLivros);
-void ChamamentoDeFuncoes(BancoDeDados& banco);
+void ChamamentoDeFuncoes(BancoDeDados& banco, std :: string url1, std :: string url2);
 void troca(std::pair<std::string, double>& a, std::pair<std::string, double>& b);
 int particiona(std::vector<std::pair<std::string, double>>& documentos, int inicio, int fim);
 void quickSort(std::vector<std::pair<std::string, double>>& documentos, int inicio, int fim);

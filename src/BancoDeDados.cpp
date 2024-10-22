@@ -64,6 +64,29 @@ bool BancoDeDados::inserirLivro(const std::string& titulo, const std::string& co
     return true;
 }
 
+bool BancoDeDados::verificarLivroExistente(const std::string& titulo) {
+    std::string sql = "SELECT COUNT(*) FROM livros WHERE titulo = ?;";
+    sqlite3_stmt* stmt;
+    int count = 0;
+
+    int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Erro ao preparar SQL: " << sqlite3_errmsg(db) << std::endl;
+        return false;
+    }
+
+    sqlite3_bind_text(stmt, 1, titulo.c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        count = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+
+    return count > 0;
+}
+
+
 std::string BancoDeDados::buscarLivro(const std::string& titulo) {
     std::string sql = "SELECT conteudo FROM livros WHERE titulo = ?;";
     sqlite3_stmt* stmt;
@@ -89,3 +112,5 @@ std::string BancoDeDados::buscarLivro(const std::string& titulo) {
 void BancoDeDados::FecharBanco() {
     sqlite3_close(db);
 }
+
+

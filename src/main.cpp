@@ -1,55 +1,64 @@
 #include "BancoDeDados.hpp"
-#include "Curl.hpp"
 #include "Tratamento.hpp"
+#include "Curl.hpp"
+#include <iostream>
 #include <fstream>
-#include <sstream>
-
-std::string lerConteudoDoArquivo(const std::string& caminhoArquivo) {
-    std::ifstream arquivo(caminhoArquivo);
-    std::stringstream buffer;
-
-    if (arquivo) {
-        buffer << arquivo.rdbuf();  // Lê o conteúdo do arquivo inteiro
-        arquivo.close();
-    } else {
-        std::cerr << "Erro ao abrir o arquivo: " << caminhoArquivo << std::endl;
-    }
-
-    return buffer.str();
-}
 
 int main() {
     BancoDeDados banco("livros.db");
 
-    banco.CriarTabela();  // Se necessário criar a tabela
+    banco.CriarTabela();
 
-    // URLs dos livros a serem baixados
-    std::string url1 = "https://www.gutenberg.org/files/1342/1342-0.txt"; // "Orgulho e Preconceito"
-    std::string url2 = "https://www.gutenberg.org/files/2701/2701-0.txt"; // "Moby Dick"
+    std::string url1, url2, titulo1, titulo2;
 
-    // Caminhos para salvar os livros baixados
-    std::string caminhoLivro1 = "Documents/orgulho_e_preconceito.txt";
-    std::string caminhoLivro2 = "Documents/moby_dick.txt";
+    std::cout << "Cole a URL do livro 1: ";
+    std::cin >> url1;
+    std::cout << "Digite o título do livro 1: ";
+    std::cin.ignore(); 
+    std::getline(std::cin, titulo1);
 
-    // Baixar os livros
-    if (baixarLivro(url1, caminhoLivro1)) {
-        std::cout << "Livro 'Orgulho e Preconceito' baixado com sucesso!" << std::endl;
-        // Inserir o livro no banco de dados
-        std::ifstream livroFile(caminhoLivro1);
-        std::string conteudo((std::istreambuf_iterator<char>(livroFile)), std::istreambuf_iterator<char>());
-        banco.inserirLivro("Orgulho e Preconceito", conteudo);
+    std::cout << "Cole a URL do livro 2: ";
+    std::cin >> url2;
+    std::cout << "Digite o título do livro 2: ";
+    std::cin.ignore();
+    std::getline(std::cin, titulo2);
+
+    
+    std::string caminhoLivro1 = "Documents/" + titulo1 + ".txt";
+    std::string caminhoLivro2 = "Documents/" + titulo2 + ".txt";
+
+    
+    if (!banco.verificarLivroExistente(titulo1)) {
+        if (baixarLivro(url1, caminhoLivro1)) {
+
+            std::cout << "Livro 1 baixado com sucesso!" << std::endl;
+            std::ifstream livroFile(caminhoLivro1);
+            std::string conteudo((std::istreambuf_iterator<char>(livroFile)), std::istreambuf_iterator<char>());
+            banco.inserirLivro(titulo1, conteudo);
+
+        } else {
+            std::cerr << "Erro ao baixar o livro 1!" << std::endl;
+        }
+    } else {
+        std::cout << "O livro 1 já existe no banco de dados." << std::endl;
     }
 
-    if (baixarLivro(url2, caminhoLivro2)) {
-        std::cout << "Livro 'Moby Dick' baixado com sucesso!" << std::endl;
-        // Inserir o livro no banco de dados
-        std::ifstream livroFile(caminhoLivro2);
-        std::string conteudo((std::istreambuf_iterator<char>(livroFile)), std::istreambuf_iterator<char>());
-        banco.inserirLivro("Moby Dick", conteudo);
+    if (!banco.verificarLivroExistente(titulo2)) {
+        if (baixarLivro(url2, caminhoLivro2)) {
+
+            std::cout << "Livro 2 baixado com sucesso!" << std::endl;
+            std::ifstream livroFile(caminhoLivro2);
+            std::string conteudo((std::istreambuf_iterator<char>(livroFile)), std::istreambuf_iterator<char>());
+            banco.inserirLivro(titulo2, conteudo);
+
+        } else {
+            std::cerr << "Erro ao baixar o livro 2!" << std::endl;
+        }
+    } else {
+        std::cout << "O livro 2 já existe no banco de dados." << std::endl;
     }
 
-    // Chamar a função para calcular TF-IDF
-    ChamamentoDeFuncoes(banco);
+    ChamamentoDeFuncoes(banco, url1, url2);
 
     banco.FecharBanco();
 

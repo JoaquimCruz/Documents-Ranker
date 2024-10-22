@@ -161,10 +161,9 @@ void RanqueamentoDocumentos(std::vector<std::pair<std::string, double>>& documen
     }
 }
 
-void ChamamentoDeFuncoes(BancoDeDados& banco) {
+void ChamamentoDeFuncoes(BancoDeDados& banco, std::string url1, std::string url2) {
     std::string titulo1 = "Orgulho e Preconceito";
     std::string titulo2 = "Moby Dick";
-    // Outros títulos podem ser buscados da mesma forma
 
     std::string conteudoLivro1 = banco.buscarLivro(titulo1);
     std::string conteudoLivro2 = banco.buscarLivro(titulo2);
@@ -177,15 +176,12 @@ void ChamamentoDeFuncoes(BancoDeDados& banco) {
     std::string frasesPath = "Documents/frases.txt"; 
     int totalLivros = 2; 
 
-    
     std::istringstream stream1(conteudoLivro1);
     std::istringstream stream2(conteudoLivro2);
 
     std::vector<std::string> words1, words2;
     std::unordered_map<std::string, int> Frequencia1, Frequencia2;
-    std::vector<std::string> palavrasFrases;
     std::unordered_map<std::string, int> DF;
-    std::vector<std::pair<std::string, double>> documentosTFIDF;
 
     words1 = LeituraDocumentos(stream1);  
     words1 = TratamentoDoTexto(words1);
@@ -195,19 +191,38 @@ void ChamamentoDeFuncoes(BancoDeDados& banco) {
     words2 = TratamentoDoTexto(words2);
     Frequencia2 = FrequenciaPalavras(words2);
 
-    palavrasFrases = LeituraDocumentos1(frasesPath);  
-    palavrasFrases = TratamentoDoTexto(palavrasFrases);
-
-    // Atualizar DF (Document Frequency)
     for (const auto& [word, _] : Frequencia1) DF[word]++;
     for (const auto& [word, _] : Frequencia2) DF[word]++;
 
-    double tfidfLivro1 = calculaTFIDF(Frequencia1, palavrasFrases, DF, totalLivros);
-    double tfidfLivro2 = calculaTFIDF(Frequencia2, palavrasFrases, DF, totalLivros);
+    std::ifstream frasesFile(frasesPath);
+    std::string frase;
 
-    documentosTFIDF.push_back({"Orgulho e Preconceito", tfidfLivro1});
-    documentosTFIDF.push_back({"Moby Dick", tfidfLivro2});
+    if (!frasesFile) {
+        std::cerr << "Erro ao abrir o arquivo de frases: " << frasesPath << std::endl;
+        return;
+    }
 
-    RanqueamentoDocumentos(documentosTFIDF);
+    std::vector<std::pair<std::string, double>> documentosTFIDF;
+
+    while (std::getline(frasesFile, frase)) {
+        std::istringstream fraseStream(frase);
+        std::vector<std::string> palavrasFrase;
+
+        palavrasFrase = LeituraDocumentos(fraseStream);
+        palavrasFrase = TratamentoDoTexto(palavrasFrase);
+
+        double tfidfLivro1 = calculaTFIDF(Frequencia1, palavrasFrase, DF, totalLivros);
+        double tfidfLivro2 = calculaTFIDF(Frequencia2, palavrasFrase, DF, totalLivros);
+
+        
+        documentosTFIDF.clear();  
+        documentosTFIDF.push_back({"Orgulho e Preconceito", tfidfLivro1});
+        documentosTFIDF.push_back({"Moby Dick", tfidfLivro2});
+
+        std::cout << "Resultado para a frase: \"" << frase << "\"" << std::endl;
+        RanqueamentoDocumentos(documentosTFIDF);
+        std::cout << "-------------------------------------" << std::endl;
+    }
+
+    frasesFile.close();
 }
-
