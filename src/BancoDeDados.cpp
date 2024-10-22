@@ -1,9 +1,7 @@
 #include "BancoDeDados.hpp"
 
-// Construtor vazio
 BancoDeDados::BancoDeDados() {}
 
-// Construtor que abre o banco de dados
 BancoDeDados::BancoDeDados(const std::string& banco) {
     int rc = sqlite3_open(banco.c_str(), &db);
     if (rc) {
@@ -15,21 +13,18 @@ BancoDeDados::BancoDeDados(const std::string& banco) {
     }
 }
 
-// Destrutor que fecha o banco de dados
 BancoDeDados::~BancoDeDados() {
     if (db) {
         sqlite3_close(db);
     }
 }
 
-// Função para verificar erros SQL
 void BancoDeDados::verificarErros(int rc) {
     if (rc != SQLITE_OK) {
         std::cerr << "Erro: " << sqlite3_errmsg(db) << std::endl;
     }
 }
 
-// Função para criar a tabela de livros
 void BancoDeDados::CriarTabela() {
     const char* sql = "CREATE TABLE IF NOT EXISTS livros ("
                       "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -45,7 +40,6 @@ void BancoDeDados::CriarTabela() {
     }
 }
 
-// Função para inserir um livro no banco de dados
 bool BancoDeDados::inserirLivro(const std::string& titulo, const std::string& conteudo) {
     std::string sql = "INSERT INTO livros (titulo, conteudo) VALUES (?, ?);";
     sqlite3_stmt* stmt;
@@ -70,7 +64,6 @@ bool BancoDeDados::inserirLivro(const std::string& titulo, const std::string& co
     return true;
 }
 
-// Função para buscar o conteúdo de um livro pelo título
 std::string BancoDeDados::buscarLivro(const std::string& titulo) {
     std::string sql = "SELECT conteudo FROM livros WHERE titulo = ?;";
     sqlite3_stmt* stmt;
@@ -93,7 +86,6 @@ std::string BancoDeDados::buscarLivro(const std::string& titulo) {
     return conteudoLivro;
 }
 
-// Função para fechar o banco de dados
 void BancoDeDados::FecharBanco() {
     sqlite3_close(db);
 }

@@ -1,8 +1,6 @@
 #include "Tratamento.hpp"
 
 
-
-
 bool isStopWord(const std::string& word, const std::string stopWords[], int size) {
     for (int i = 0; i < size; ++i) {
         if (word == stopWords[i]) {
@@ -177,9 +175,9 @@ void ChamamentoDeFuncoes(BancoDeDados& banco) {
     }
 
     std::string frasesPath = "Documents/frases.txt"; 
-    int totalLivros = 2; // Atualize conforme o número de livros que você vai considerar
+    int totalLivros = 2; 
 
-    // Processar o conteúdo dos livros
+    
     std::istringstream stream1(conteudoLivro1);
     std::istringstream stream2(conteudoLivro2);
 
@@ -189,15 +187,15 @@ void ChamamentoDeFuncoes(BancoDeDados& banco) {
     std::unordered_map<std::string, int> DF;
     std::vector<std::pair<std::string, double>> documentosTFIDF;
 
-    words1 = LeituraDocumentos(stream1);  // Modificar para aceitar um stream
+    words1 = LeituraDocumentos(stream1);  
     words1 = TratamentoDoTexto(words1);
     Frequencia1 = FrequenciaPalavras(words1);
 
-    words2 = LeituraDocumentos(stream2);  // Modificar para aceitar um stream
+    words2 = LeituraDocumentos(stream2);  
     words2 = TratamentoDoTexto(words2);
     Frequencia2 = FrequenciaPalavras(words2);
 
-    palavrasFrases = LeituraDocumentos1(frasesPath);  // Ainda usando frases de arquivo
+    palavrasFrases = LeituraDocumentos1(frasesPath);  
     palavrasFrases = TratamentoDoTexto(palavrasFrases);
 
     // Atualizar DF (Document Frequency)
