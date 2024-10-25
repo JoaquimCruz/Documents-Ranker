@@ -114,7 +114,7 @@ double calculaTFIDF(const std :: unordered_map<std :: string, int>& frequencias,
             Tf = aux -> second;
             Tf = Tf/frequencias.size();
             Df = DF.at(w);
-            Idf = std::log(static_cast<double>( 1+ totalLivros) / (1 + Df) + 1);
+            Idf = std::log(static_cast<double>( 1 + totalLivros) / (1 + Df) + 1);
             totalTFIDF += Tf * Idf;
             
         }
@@ -161,63 +161,53 @@ void RanqueamentoDocumentos(std::vector<std::pair<std::string, double>>& documen
     }
 }
 
-void ChamamentoDeFuncoes(BancoDeDados& banco, std::string url1, std::string url2) {
-    std::string titulo1 = "Orgulho e Preconceito";
-    std::string titulo2 = "Moby Dick";
+void ChamamentoDeFuncoes(BancoDeDados& banco, const std::vector<std::string>& urls, const std::vector<std::string>& titulos) {
+    std::unordered_map<std::string, std::unordered_map<std::string, int>> frequenciasLivros;
+    std::unordered_map<std::string, int> DF;
+    int totalLivros = titulos.size();
 
-    std::string conteudoLivro1 = banco.buscarLivro(titulo1);
-    std::string conteudoLivro2 = banco.buscarLivro(titulo2);
+    for (size_t i = 0; i < urls.size(); ++i) {
+        std::string caminhoLivro = "Documents/" + titulos[i] + ".txt";
+        std::string conteudoLivro = banco.buscarLivro(titulos[i]);
 
-    if (conteudoLivro1.empty() || conteudoLivro2.empty()) {
-        std::cerr << "Erro: Um ou mais livros não encontrados no banco de dados!" << std::endl;
-        return;
+        if (conteudoLivro.empty()) {
+            std::cerr << "Erro: O livro " << titulos[i] << " não foi encontrado no banco de dados!" << std::endl;
+            continue;
+        }
+
+        std::istringstream streamLivro(conteudoLivro);
+        std::vector<std::string> palavrasLivro = LeituraDocumentos(streamLivro);
+        palavrasLivro = TratamentoDoTexto(palavrasLivro);
+
+        std::unordered_map<std::string, int> frequencias = FrequenciaPalavras(palavrasLivro);
+        frequenciasLivros[titulos[i]] = frequencias;
+
+        // Atualizar DF (document frequency)
+        for (const auto& [word, _] : frequencias) {
+            DF[word]++;
+        }
     }
 
-    std::string frasesPath = "Documents/frases.txt"; 
-    int totalLivros = 2; 
-
-    std::istringstream stream1(conteudoLivro1);
-    std::istringstream stream2(conteudoLivro2);
-
-    std::vector<std::string> words1, words2;
-    std::unordered_map<std::string, int> Frequencia1, Frequencia2;
-    std::unordered_map<std::string, int> DF;
-
-    words1 = LeituraDocumentos(stream1);  
-    words1 = TratamentoDoTexto(words1);
-    Frequencia1 = FrequenciaPalavras(words1);
-
-    words2 = LeituraDocumentos(stream2);  
-    words2 = TratamentoDoTexto(words2);
-    Frequencia2 = FrequenciaPalavras(words2);
-
-    for (const auto& [word, _] : Frequencia1) DF[word]++;
-    for (const auto& [word, _] : Frequencia2) DF[word]++;
-
-    std::ifstream frasesFile(frasesPath);
+    std::ifstream frasesFile("Documents/frases.txt");
     std::string frase;
 
     if (!frasesFile) {
-        std::cerr << "Erro ao abrir o arquivo de frases: " << frasesPath << std::endl;
+        std::cerr << "Erro ao abrir o arquivo de frases: Documents/frases.txt" << std::endl;
         return;
     }
 
-    std::vector<std::pair<std::string, double>> documentosTFIDF;
-
+    // Processar as frases e calcular o TF-IDF para cada livro
     while (std::getline(frasesFile, frase)) {
         std::istringstream fraseStream(frase);
-        std::vector<std::string> palavrasFrase;
-
-        palavrasFrase = LeituraDocumentos(fraseStream);
+        std::vector<std::string> palavrasFrase = LeituraDocumentos(fraseStream);
         palavrasFrase = TratamentoDoTexto(palavrasFrase);
 
-        double tfidfLivro1 = calculaTFIDF(Frequencia1, palavrasFrase, DF, totalLivros);
-        double tfidfLivro2 = calculaTFIDF(Frequencia2, palavrasFrase, DF, totalLivros);
-
+        std::vector<std::pair<std::string, double>> documentosTFIDF;
         
-        documentosTFIDF.clear();  
-        documentosTFIDF.push_back({"Orgulho e Preconceito", tfidfLivro1});
-        documentosTFIDF.push_back({"Moby Dick", tfidfLivro2});
+        for (const auto& titulo : titulos) {
+            double tfidf = calculaTFIDF(frequenciasLivros[titulo], palavrasFrase, DF, totalLivros);
+            documentosTFIDF.emplace_back(titulo, tfidf);
+        }
 
         std::cout << "Resultado para a frase: \"" << frase << "\"" << std::endl;
         RanqueamentoDocumentos(documentosTFIDF);
@@ -226,3 +216,4 @@ void ChamamentoDeFuncoes(BancoDeDados& banco, std::string url1, std::string url2
 
     frasesFile.close();
 }
+

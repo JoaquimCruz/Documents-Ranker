@@ -9,56 +9,41 @@ int main() {
 
     banco.CriarTabela();
 
-    std::string url1, url2, titulo1, titulo2;
+    std::vector<std::string> urls;
+    std::vector<std::string> titulos;
+    int i = 1, aux = -1;
 
-    std::cout << "Cole a URL do livro 1: ";
-    std::cin >> url1;
-    std::cout << "Digite o título do livro 1: ";
-    std::cin.ignore(); 
-    std::getline(std::cin, titulo1);
+    do {
+        std::string url, titulo;
+        
+        std::cout << "Cole a URL do livro " << i << ": ";
+        std::cin >> url;
+        std::cout << "Digite o título do livro " << i << ": ";
+        std::cin.ignore(); 
+        std::getline(std::cin, titulo);
+        
+        urls.emplace_back(url);
+        titulos.emplace_back(titulo);
 
-    std::cout << "Cole a URL do livro 2: ";
-    std::cin >> url2;
-    std::cout << "Digite o título do livro 2: ";
-    std::cin.ignore();
-    std::getline(std::cin, titulo2);
-
-    
-    std::string caminhoLivro1 = "Documents/" + titulo1 + ".txt";
-    std::string caminhoLivro2 = "Documents/" + titulo2 + ".txt";
-
-    
-    if (!banco.verificarLivroExistente(titulo1)) {
-        if (baixarLivro(url1, caminhoLivro1)) {
-
-            std::cout << "Livro 1 baixado com sucesso!" << std::endl;
-            std::ifstream livroFile(caminhoLivro1);
-            std::string conteudo((std::istreambuf_iterator<char>(livroFile)), std::istreambuf_iterator<char>());
-            banco.inserirLivro(titulo1, conteudo);
-
+        if(!banco.verificarLivroExistente(titulo)){
+            if(!baixarLivro(url, "Documents/" + titulo + ".txt")){
+                std::cerr << "Erro ao baixar o livro " << titulo << "!" << std::endl;
+            } else {
+                std::ifstream livro("Documents/" + titulo + ".txt");
+                std::string conteudo((std::istreambuf_iterator<char>(livro)), std::istreambuf_iterator<char>());
+                banco.inserirLivro(titulo, conteudo);
+            }
         } else {
-            std::cerr << "Erro ao baixar o livro 1!" << std::endl;
+            std::cout << "O livro " << titulo << " já está no banco de dados!" << std::endl;
         }
-    } else {
-        std::cout << "O livro 1 já existe no banco de dados." << std::endl;
-    }
 
-    if (!banco.verificarLivroExistente(titulo2)) {
-        if (baixarLivro(url2, caminhoLivro2)) {
+        std::cout << "Para sair digite 0, para continuar digite 1: ";
+        std::cin >> aux;
+        ++i;
+        
+    } while (aux != 0);
 
-            std::cout << "Livro 2 baixado com sucesso!" << std::endl;
-            std::ifstream livroFile(caminhoLivro2);
-            std::string conteudo((std::istreambuf_iterator<char>(livroFile)), std::istreambuf_iterator<char>());
-            banco.inserirLivro(titulo2, conteudo);
-
-        } else {
-            std::cerr << "Erro ao baixar o livro 2!" << std::endl;
-        }
-    } else {
-        std::cout << "O livro 2 já existe no banco de dados." << std::endl;
-    }
-
-    ChamamentoDeFuncoes(banco, url1, url2);
+    ChamamentoDeFuncoes(banco, urls, titulos);
 
     banco.FecharBanco();
 
