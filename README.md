@@ -1,6 +1,6 @@
 # Sistema de Ranqueamento de Documentos com TF-IDF
 
-Este projeto é uma aplicação em C++ que implementa um sistema de ranqueamento de documentos utilizando o algoritmo **TF-IDF (Term Frequency - Inverse Document Frequency)**. O sistema permite que o usuário baixe conteúdos de livros a partir de URLs fornecidas, os armazene em um banco de dados SQLite e analise sua relevância em relação a frases de pesquisa. Além de explorar o cálculo de TF-IDF, o projeto revisa conceitos fundamentais de Estruturas de Dados e Algoritmos.
+Este projeto é uma aplicação em C++ que implementa um sistema de ranqueamento de documentos utilizando o algoritmo **TF-IDF (Term Frequency - Inverse Document Frequency)**. O sistema permite que o usuário baixe conteúdos de livros a partir de URLs fornecidas, os armazene em um banco de dados SQLite e analise sua relevância em relação a frases de pesquisa. Além de explorar o cálculo de TF-IDF, o projeto revisa conceitos fundamentais de Estruturas de Dados e Algoritmos, como listas, filas, ordenação e tabelas hash.
 
 ---
 
@@ -8,69 +8,63 @@ Este projeto é uma aplicação em C++ que implementa um sistema de ranqueamento
 
 1. [Descrição do Projeto](#descrição-do-projeto)
 2. [Funcionalidades](#funcionalidades)
-3. [Arquivos e Funções](#arquivos-e-funções)
-4. [Desafios Computacionais e Otimizações](#desafios-computacionais-e-otimizações)
-5. [Como Executar](#como-executar)
-6. [Requisitos](#requisitos)
-7. [Considerações Finais](#considerações-finais)
-8. [Autor](#autor)
+3. [Estrutura do Projeto](#estrutura-do-projeto)
+4. [Passo a Passo do Código](#passo-a-passo-do-código)
+5. [Desafios Computacionais e Otimizações](#desafios-computacionais-e-otimizações)
+6. [Como Executar](#como-executar)
+7. [Requisitos](#requisitos)
+8. [Considerações Finais](#considerações-finais)
+9. [Autor](#autor)
 
 ---
 
 ## Descrição do Projeto
 
-O sistema foi projetado para baixar livros, armazená-los em um banco de dados SQLite, processar seu conteúdo e calcular a relevância dos documentos em relação a frases de consulta. Utilizando o algoritmo TF-IDF, ele oferece uma classificação dos documentos mais relevantes para a consulta.
+O objetivo deste sistema é baixar livros, armazená-los em um banco de dados, processar seu conteúdo e classificá-los por relevância em relação a frases de consulta. Utilizando o algoritmo TF-IDF, o sistema calcula uma pontuação para cada livro baseada em termos específicos, oferecendo uma classificação dos documentos mais relevantes para a consulta.
+
+A aplicação foi projetada para exercitar técnicas de manipulação de dados textuais, incluindo o uso de listas, tabelas hash e algoritmos de ordenação, além de explorar o funcionamento de banco de dados e operações de rede.
 
 ---
 
 ## Funcionalidades
 
-1. **Download de Livros**: Solicita URLs e títulos dos livros para realizar o download e salva o conteúdo localmente.
-2. **Armazenamento no Banco de Dados**: Armazena o conteúdo dos livros em uma tabela SQLite, evitando duplicidade.
-3. **Processamento de Texto**: Realiza normalização dos textos, removendo pontuações e palavras irrelevantes (*stopwords*).
-4. **Cálculo de TF-IDF**: Determina a relevância de cada livro em relação a frases de consulta.
-5. **Ranqueamento de Documentos**: Classifica os livros por relevância usando algoritmos de ordenação.
+1. **Download de Livros**: O sistema solicita URLs e títulos dos livros que o usuário deseja baixar. Utilizando `cURL`, ele obtém o conteúdo e salva o livro em arquivos locais.
+2. **Armazenamento no Banco de Dados**: Cada livro é armazenado em uma tabela SQLite, evitando duplicação de registros e permitindo acesso rápido ao conteúdo.
+3. **Processamento de Texto**: O sistema realiza limpeza e normalização do texto, removendo pontuações e convertendo o texto para letras minúsculas, além de excluir *stopwords* (palavras comuns e irrelevantes para a análise).
+4. **Cálculo de TF-IDF**: Para cada frase de consulta, o sistema calcula o TF-IDF de cada termo nos documentos e determina a relevância de cada livro em relação à frase.
+5. **Ranqueamento de Documentos**: Os livros são ordenados de acordo com a relevância calculada, permitindo ao usuário visualizar os documentos mais importantes para a consulta.
 
 ---
 
-## Arquivos e Funções
+## Estrutura do Projeto
 
-### `BancoDeDados.hpp/cpp`
-Define a classe `BancoDeDados`, responsável por gerenciar o banco de dados SQLite, incluindo operações de criação, inserção, verificação e recuperação.
+1. **Leitura e Processamento dos Documentos**
+   - **Download e Armazenamento**: Os livros são baixados e salvos localmente. A classe `BancoDeDados` permite verificar se um livro já foi inserido no banco e evita duplicação.
+   - **Normalização e Limpeza de Texto**: Cada texto é processado para remover pontuações, converter para minúsculas e remover palavras irrelevantes (*stopwords*), tornando o conteúdo mais consistente para a análise.
 
-- **`BancoDeDados(const std::string& banco)`**: Construtor que inicializa a conexão com o banco SQLite. Exibe uma mensagem de erro se a conexão falhar.
-- **`~BancoDeDados()`**: Destrutor que fecha a conexão com o banco, garantindo o encerramento ao final da execução.
-- **`CriarTabela()`**: Cria a tabela `livros` (com `id`, `titulo` e `conteudo`) caso não exista.
-- **`inserirLivro(const std::string& titulo, const std::string& conteudo)`**: Insere um novo livro no banco. Retorna `false` se houver erro durante a inserção.
-- **`verificarLivroExistente(const std::string& titulo)`**: Verifica se um livro já existe no banco de dados com base no título.
-- **`buscarLivro(const std::string& titulo)`**: Retorna o conteúdo de um livro dado seu título. Retorna uma string vazia se o livro não for encontrado.
-- **`FecharBanco()`**: Fecha a conexão explicitamente com o banco de dados.
+2. **Cálculo de TF-IDF**
+   - **TF (Term Frequency)**: Mede a frequência com que cada termo aparece no documento específico.
+   - **IDF (Inverse Document Frequency)**: Calcula a importância do termo no conjunto de todos os documentos, considerando que termos muito frequentes em todos os documentos têm menor relevância.
+   - **Relevância Total**: Para cada frase de pesquisa, o sistema soma os valores de TF-IDF de termos que aparecem na frase e no documento, resultando em uma pontuação de relevância.
 
-### `Tratamento.hpp/cpp`
-Implementa o processamento de texto, incluindo normalização, remoção de pontuações e *stopwords*, e cálculo de frequências para o TF-IDF.
+3. **Ranqueamento de Documentos**
+   - O sistema classifica os documentos pela relevância usando algoritmos de ordenação como **QuickSort**, tornando-o eficiente para conjuntos de dados grandes.
+   - Os documentos são exibidos em ordem decrescente de relevância para cada frase de consulta, permitindo que o usuário identifique rapidamente os mais importantes.
 
-- **`isStopWord(const std::string& word, const std::string stopWords[], int size)`**: Verifica se uma palavra é uma *stopword*.
-- **`LeituraDocumentos1(const std::string& filePath)`**: Lê palavras de um arquivo e retorna um vetor com as palavras.
-- **`LeituraDocumentos(std::istringstream& stream)`**: Similar à função anterior, mas lê de um fluxo de texto (`std::istringstream`), útil para documentos já carregados na memória.
-- **`TratamentoDoTexto(std::vector<std::string> words)`**: Realiza limpeza no texto, removendo pontuações e convertendo para minúsculas. Também remove as *stopwords*.
-- **`FrequenciaPalavras(std::vector<std::string>& words)`**: Calcula a frequência de cada palavra em um vetor de palavras e retorna um mapa (`unordered_map`) com essas frequências.
-- **`calculaTFIDF(...)`**: Calcula o TF-IDF de cada termo em relação aos documentos, considerando a frequência da palavra no documento e o número de documentos onde ela aparece.
-- **`RanqueamentoDocumentos(...)`**: Ordena e exibe os documentos com base na relevância de TF-IDF para uma frase de consulta usando um algoritmo de ordenação.
+---
 
-### `Curl.hpp/cpp`
-Implementa as funções para realizar o download de conteúdo via cURL e salvar os dados em arquivos locais.
+## Passo a Passo do Código
 
-- **`grava_conteudo(void* ptr, size_t size, size_t nmemb, void* userp)`**: Callback para gravar dados baixados diretamente no arquivo. Escreve os dados recebidos pelo cURL no arquivo de destino.
-- **`baixarLivro(const std::string& url, const std::string& caminhoArquivo)`**: Função principal que baixa o conteúdo da URL fornecida e salva no caminho especificado. Retorna `true` se o download for bem-sucedido e `false` se houver falha.
-
-### `main.cpp`
-Ponto de entrada do programa, coordena a execução dos módulos para download, armazenamento, processamento e análise dos livros.
-
-- **Banco de Dados e Tabela**: Inicializa `BancoDeDados` e cria a tabela `livros`, se necessário.
-- **Coleta de URLs e Títulos**: Solicita ao usuário URLs e títulos para download.
-- **Verificação e Download**: Verifica se o livro já existe no banco. Se não, realiza o download e o armazena.
-- **Processamento e Ranqueamento**: Chama `ChamamentoDeFuncoes` para processar o texto, calcular o TF-IDF e exibir o ranqueamento.
-- **Fechamento**: Finaliza a conexão com o banco de dados ao encerrar a execução.
+1. **Inicialização do Banco de Dados**: Cria uma instância da classe `BancoDeDados` e abre uma conexão com o arquivo `livros.db`, garantindo a criação da tabela de livros.
+2. **Coleta de URLs e Títulos**: O sistema solicita ao usuário a URL e o título dos livros que deseja baixar.
+3. **Verificação e Download dos Livros**:
+   - Verifica se o livro já está armazenado no banco.
+   - Se não estiver, utiliza `cURL` para baixar o conteúdo da URL e salva o livro em `Documents/[titulo].txt`.
+   - Lê o conteúdo do arquivo baixado e armazena o texto no banco de dados.
+4. **Processamento e Análise de Relevância**:
+   - Após o download e armazenamento, o sistema processa o conteúdo dos livros para normalização do texto e remoção de *stopwords*.
+   - Calcula-se o TF-IDF de cada termo nos documentos em relação à frase de consulta e classifica os livros por relevância.
+5. **Exibição do Ranking de Relevância**: Exibe os livros classificados pela relevância em relação a cada frase de consulta processada.
 
 ---
 
