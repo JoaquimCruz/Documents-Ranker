@@ -209,6 +209,7 @@ void ChamamentoDeFuncoes(BancoDeDados& banco, const std::vector<std::string>& ur
             documentosTFIDF.emplace_back(titulo, tfidf);
         }
 
+        
         std::cout << "Resultado para a frase: \"" << frase << "\"" << std::endl;
         RanqueamentoDocumentos(documentosTFIDF);
         std::cout << "-------------------------------------" << std::endl;
