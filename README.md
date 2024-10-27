@@ -63,6 +63,70 @@ Este projeto também explora o uso de listas, tabelas hash e algoritmos de orden
 1. **Ordenação com QuickSort**: O QuickSort, com complexidade `O(n log n)`, é eficiente para ordenar documentos pela relevância, mas estruturas de dados avançadas, como árvores de busca balanceadas, poderiam ser alternativas para melhorar a busca e a ordenação.
 2. **Árvores de Busca e Grafos**: Estruturas como árvores AVL poderiam reduzir o tempo de busca e melhorar a organização dos dados, enquanto uma representação em grafos poderia facilitar a análise semântica de relações entre documentos.
 
+## Reflexão sobre o Uso de Estruturas de Dados Avançadas
+
+Embora a solução proposta com as estruturas atuais seja funcional e suficiente para atender a todos os requisitos do trabalho, o uso de estruturas em árvore, como **Árvores Binárias de Busca (BST)** ou **Árvores AVL**, e de **grafos** poderia aprimorar a eficiência do sistema.
+
+### 1. Utilização de Árvores Binárias de Busca (BST) ou Árvores AVL
+
+Atualmente, o sistema utiliza listas lineares ou `std::unordered_map` para armazenar e buscar termos dentro dos documentos. Embora sejam eficientes para inserções e buscas, há cenários em que uma estrutura de árvore poderia otimizar ainda mais o tempo de busca e organização dos dados.
+
+#### Vantagens do Uso de Árvores Balanceadas
+
+1. **Redução do Tempo de Busca**:
+   - Em uma lista, a busca por um termo específico pode ter complexidade **O(n)** no pior caso, onde `n` é o número de termos. Utilizando uma **árvore balanceada**, como a **Árvore AVL**, a complexidade de busca é reduzida para **O(log n)**, tornando a pesquisa mais eficiente.
+
+2. **Inserções Ordenadas**:
+   - Árvores AVL e BSTs mantêm os dados ordenados, permitindo que operações como a ordenação de termos ou a criação de rankings sejam realizadas diretamente durante o processo de inserção, sem precisar de um passo adicional de ordenação. Isso pode ser útil, por exemplo, no armazenamento de frequências de palavras.
+
+3. **Aplicação**:
+   - Podemos usar uma árvore AVL para armazenar as palavras dos documentos e suas frequências. Em vez de uma lista, onde a contagem de frequência pode ser mais lenta, uma árvore AVL permite que as inserções e buscas sejam feitas em **O(log n)**, mesmo que o conjunto de dados cresça significativamente.
+   - Por exemplo, cada nó da árvore pode representar uma palavra, com o valor do nó representando a frequência da palavra no documento.
+
+#### Exemplo de Estrutura com Árvore AVL para Armazenamento de Termos
+
+Cada nó de uma Árvore AVL poderia armazenar:
+- **Termo**: A palavra do documento.
+- **Frequência**: O número de ocorrências dessa palavra no documento.
+  
+Com essa abordagem, calcular a **TF (Term Frequency)** e manter uma estrutura organizada e rápida para busca de termos se torna mais eficiente, principalmente em documentos extensos com grande diversidade de palavras.
+
+### 2. Representação com Grafos para Relações de Relevância entre Documentos
+
+Outra estrutura avançada que poderia melhorar a organização e análise dos documentos é o uso de um **grafo** para representar as relações de relevância entre documentos e termos de pesquisa.
+
+#### Vantagens do Uso de Grafos
+
+1. **Modelagem de Relações entre Documentos**:
+   - Em um grafo, cada **vértice** pode representar um documento, e as **arestas** podem representar uma relação de similaridade ou relevância entre documentos, com pesos que representam o valor de **TF-IDF** ou outras métricas de relevância.
+   - Por exemplo, se dois documentos compartilham uma alta frequência de termos importantes, a aresta entre esses dois vértices pode ter um peso mais alto, indicando uma relação forte entre os documentos.
+
+2. **Análises Semânticas e Caminhos**:
+   - Com um grafo, é possível analisar quais documentos são mais relevantes para certos termos de pesquisa, encontrando caminhos entre documentos e identificando agrupamentos (clusters) de documentos com relevâncias similares.
+   - Técnicas de análise de grafos, como **busca em largura** (BFS) ou **busca em profundidade** (DFS), podem ser aplicadas para explorar documentos relacionados de maneira mais eficiente e sofisticada.
+
+3. **Aplicação**:
+   - Cada vez que uma análise TF-IDF é realizada, o grafo pode ser atualizado com arestas ponderadas entre documentos relacionados. Isso facilita a visualização e a recuperação de documentos semelhantes ou relevantes para um conjunto de termos.
+
+#### Estrutura Proposta de Grafo
+
+- **Vértices**: Cada vértice representa um documento.
+- **Arestas**: As arestas entre vértices representam a relevância entre documentos, calculada com base nos termos comuns e suas pontuações de TF-IDF.
+- **Pesos das Arestas**: O peso pode ser determinado pelo valor de similaridade entre documentos, utilizando métricas como **coseno de similaridade** ou **Jaccard** com base nas palavras-chave compartilhadas.
+
+### Comparação e Conclusão
+
+| Estrutura      | Complexidade de Busca | Vantagens                                                | Aplicação no Sistema                |
+|----------------|-----------------------|----------------------------------------------------------|-------------------------------------|
+| Lista / Vector | O(n)                  | Simples e fácil de implementar                           | Armazenamento inicial dos termos    |
+| AVL / BST      | O(log n)              | Ordenação automática, rápida busca e inserção             | Armazenamento de termos e frequências |
+| Grafo          | Depende do algoritmo  | Modelagem de relações complexas, análise de similaridade | Relação entre documentos e termos   |
+
+### Reflexão Final
+
+Embora a estrutura atual seja funcional e atende aos requisitos do trabalho, o uso de **árvores AVL** e **grafos** fornece um entendimento mais profundo sobre o processamento eficiente de dados textuais. A implementação dessas estruturas oferece uma solução otimizada para o sistema de ranqueamento de documentos, reduzindo tempos de busca e inserção e permitindo a modelagem de relações complexas entre documentos e termos de pesquisa.
+
+
 ## Instruções de Compilação e Execução
 
 ### Pré-requisitos
