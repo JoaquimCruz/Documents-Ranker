@@ -101,3 +101,17 @@ make r
 
 3. O servidor estará acessível em http://localhost:9080.
 
+## Desempenho do Sistema
+
+### Tempo de Execução
+- **Download e Inserção**: A execução é `O(n)`, onde `n` é o tamanho do documento. Para grandes volumes, o tempo depende da velocidade de conexão e do tamanho do conteúdo.
+- **Cálculo de Frequência e TF-IDF**: A complexidade é `O(m)` para a contagem de palavras e `O(p + q)` para o cálculo TF-IDF, onde `m` é o número de palavras únicas, `p` é o número de palavras no documento e `q` é o número de palavras na frase de pesquisa.
+
+### Uso de Memória
+- **Banco de Dados**: O SQLite armazena dados em disco, minimizando o uso de memória principal.
+- **Estruturas Temporárias**: `std::unordered_map` oferece acesso rápido sem sobrecarregar a memória, armazenando apenas palavras e suas frequências para cálculo.
+
+## Considerações Finais
+
+Este sistema oferece uma aplicação prática do cálculo de relevância com TF-IDF em documentos textuais, utilizando cURL para download, SQLite para armazenamento e Pistache para integração com o frontend. Estruturas de dados como `std::unordered_map` e `std::vector` oferecem acesso rápido e eficiente para manipulação de dados. Melhorias futuras podem incluir o uso de árvores de busca e grafos para refinar o desempenho e agregar funcionalidades.
+
