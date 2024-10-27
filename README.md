@@ -84,3 +84,20 @@ brew install pistache curl sqlite3 jsoncpp
 
 # Windows (vcpkg)
 vcpkg install pistache curl sqlite3 jsoncpp
+
+```
+## Compilação e Execução
+
+1. Compile o projeto:
+
+```bash
+make
+```
+
+2. Execute o servidor:
+```bash
+make r
+```
+
+3. O servidor estará acessível em http://localhost:9080.
+
