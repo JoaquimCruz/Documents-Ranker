@@ -68,10 +68,9 @@ Este projeto também explora o uso de listas, tabelas hash e algoritmos de orden
 ### Pré-requisitos
 
 Para compilar e executar este projeto, instale:
-- **Pistache** (para servidor RESTful)
 - **cURL** (para download de arquivos)
 - **SQLite3** (para banco de dados)
-- **nlohmann/json** (para manipulação de JSON)
+
 
 Instale as dependências:
 Para instação da biblioteca sqlite:
@@ -90,20 +89,6 @@ sudo apt update
 sudo apt install libcurl4-openssl-dev
 
 ```
-Para instalação da biblioteca Pistache:
-```Markdown
-# Atualize o gerenciador de pacotes
-sudo apt update
-# Instale a biblioteca Pistache
-sudo apt install libpistache-dev
-```
-Para instalação da biblioteca nlohmann/json:
-```Markdown
-# Atualize o gerenciador de pacotes
-sudo apt update
-# Instale a biblioteca nlohmann/json
-sudo apt install libjsoncpp-dev
-```
 Por fim, caso prefira instalar todas as bilbiotecas em um comando apenas:
 
 ```Markdown
@@ -111,13 +96,13 @@ Por fim, caso prefira instalar todas as bilbiotecas em um comando apenas:
 # Atualize o gerenciador de pacotes
 sudo apt update
 # Instala todas as bibliotecas necessárias
-sudo apt install libpistache-dev libcurl4-openssl-dev libsqlite3-dev libjsoncpp-dev
+sudo apt install libcurl4-openssl-dev libsqlite3-dev 
 
 # MacOS (Homebrew)
-brew install pistache curl sqlite3 jsoncpp
+brew install curl sqlite3 
 
 # Windows (vcpkg)
-vcpkg install pistache curl sqlite3 jsoncpp
+vcpkg install curl sqlite3 
 
 ```
 # Compilação
