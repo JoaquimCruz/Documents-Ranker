@@ -3,10 +3,10 @@
 #include "Curl.hpp"
 #include <iostream>
 #include <fstream>
+#include <filesystem> // C++17 para manipulação de diretórios
 
 int main() {
     BancoDeDados banco("livros.db");
-
     banco.CriarTabela();
 
     std::vector<std::string> urls;
@@ -19,7 +19,8 @@ int main() {
         std::cout << "1 - Inserir URLs dos livros desejados" << std::endl;
         std::cout << "2 - Procurar livros direto do banco de dados" << std::endl;
         std::cout << "3 - Listar livros" << std::endl;
-        std::cout << "4 - Sair" << std::endl;
+        std::cout << "4 - Inserir frase" << std::endl;
+        std::cout << "5 - Sair" << std::endl;
         std::cout << "Digite a opcao desejada: ";
         std::cin >> aux1;
         std::cin.ignore(); // Ignorar o newline após a entrada numérica para getline funcionar corretamente
@@ -80,7 +81,28 @@ int main() {
                 }
                 break;
 
-            case 4:
+            case 4: {
+                std::cout << "Digite a frase que deseja adicionar: ";
+                std::string frase;
+                std::getline(std::cin, frase);
+
+                // Verifica e cria o diretório Documents, se necessário
+                if (!std::filesystem::exists("Documents")) {
+                    std::filesystem::create_directory("Documents");
+                }
+
+                std::ofstream frasesFile("Documents/frases.txt", std::ios::app);
+                if (frasesFile) {
+                    frasesFile << frase << std::endl;
+                    std::cout << "Frase adicionada!" << std::endl;
+                } else {
+                    std::cerr << "Erro ao abrir o arquivo para salvar a frase!" << std::endl;
+                }
+                frasesFile.close();
+                }
+                break;
+
+            case 5:
                 std::cout << "Saindo..." << std::endl;
                 break;
 
@@ -88,7 +110,7 @@ int main() {
                 std::cout << "Opção inválida!" << std::endl;
                 break;
         }
-    } while (aux1 != 4);
+    } while (aux1 != 5);
 
     std::cout << "Processando livros..." << std::endl;
     ChamamentoDeFuncoes(banco, urls, titulos);
