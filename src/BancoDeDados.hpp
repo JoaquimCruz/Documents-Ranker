@@ -20,6 +20,7 @@ public:
     bool inserirLivro(const std :: string& titulo, const std :: string & conteudo);
     bool verificarLivroExistente(const std::string& titulo);
     std :: string buscarLivro(const std :: string& titulo);
+    std::vector<std::string> listarLivros();
     void FecharBanco();
 
 

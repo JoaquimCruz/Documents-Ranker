@@ -109,6 +109,26 @@ std::string BancoDeDados::buscarLivro(const std::string& titulo) {
     return conteudoLivro;
 }
 
+std::vector<std::string> BancoDeDados::listarLivros() {
+    std::vector<std::string> titulos;
+    sqlite3_stmt* stmt;
+    const char* sql = "SELECT titulo FROM livros";
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK) {
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            const char* titulo = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+            if (titulo) {
+                titulos.emplace_back(titulo);
+            }
+        }
+    } else {
+        std::cerr << "Erro ao listar livros: " << sqlite3_errmsg(db) << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+    return titulos;
+}
+
 void BancoDeDados::FecharBanco() {
     sqlite3_close(db);
 }
