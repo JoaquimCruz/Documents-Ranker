@@ -74,9 +74,43 @@ Para compilar e executar este projeto, instale:
 - **nlohmann/json** (para manipulação de JSON)
 
 Instale as dependências:
+Para instação da biblioteca sqlite:
+```Markdown
+# Atualize o gerenciador de pacotes
+sudo apt update
+# Instale a biblioteca SQLite3
+sudo apt install libsqlite3-dev
 
-```bash
+```
+Para instação da biblioteca Curl:
+```Markdown
+# Atualize o gerenciador de pacotes
+sudo apt update
+# Instale a biblioteca cURL
+sudo apt install libcurl4-openssl-dev
+
+```
+Para instalação da biblioteca Pistache:
+```Markdown
+# Atualize o gerenciador de pacotes
+sudo apt update
+# Instale a biblioteca Pistache
+sudo apt install libpistache-dev
+```
+Para instalação da biblioteca nlohmann/json:
+```Markdown
+# Atualize o gerenciador de pacotes
+sudo apt update
+# Instale a biblioteca nlohmann/json
+sudo apt install libjsoncpp-dev
+```
+Por fim, caso prefira instalar todas as bilbiotecas em um comando apenas:
+
+```Markdown
 # Ubuntu
+# Atualize o gerenciador de pacotes
+sudo apt update
+# Instala todas as bibliotecas necessárias
 sudo apt install libpistache-dev libcurl4-openssl-dev libsqlite3-dev libjsoncpp-dev
 
 # MacOS (Homebrew)
@@ -86,18 +120,15 @@ brew install pistache curl sqlite3 jsoncpp
 vcpkg install pistache curl sqlite3 jsoncpp
 
 ```
-## Compilação e Execução
+# Compilação
 
-1. Compile o projeto:
-
-```bash
-make
-```
-
-2. Execute o servidor:
-```bash
-make r
-```
+Para compilar e rodar o código usando MakeFile, basta seguir os seguintes comandos.
+| Comando                |  Função                                                                                               |                     
+| -----------------------| ------------------------------------------------------------------------------------------------------|
+|  make clean          | Apaga a última compilação realizada contida na pasta build                                            |
+|  make                | Executa a compilação do programa utilizando o gcc, e o resultado vai para a pasta build               |
+|  make run            | Executa o programa da pasta build após a realização da compilação                                     |
+|make r| Faz os três processos descritos acima em apenas um comando|
 
 3. O servidor estará acessível em http://localhost:9080.
 
