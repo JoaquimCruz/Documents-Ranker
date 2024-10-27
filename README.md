@@ -8,10 +8,19 @@ Este projeto implementa um sistema de ranqueamento de documentos utilizando o al
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Passo a Passo do Código](#passo-a-passo-do-código)
 - [Desafios Computacionais e Otimizações](#desafios-computacionais-e-otimizações)
+  - [Estruturas de Dados Utilizadas](#estruturas-de-dados-utilizadas)
+  - [Desempenho e Alternativas](#desempenho-e-alternativas)
+- [Reflexão sobre o Uso de Estruturas de Dados Avançadas](#reflexão-sobre-o-uso-de-estruturas-de-dados-avançadas)
+  - [1. Utilização de Árvores Binárias de Busca (BST) ou Árvores AVL](#1-utilização-de-árvores-binárias-de-busca-bst-ou-árvores-avl)
+  - [2. Representação com Grafos para Relações de Relevância entre Documentos](#2-representação-com-grafos-para-relações-de-relevância-entre-documentos)
+  - [Comparação e Conclusão](#comparação-e-conclusão)
 - [Instruções de Compilação e Execução](#instruções-de-compilação-e-execução)
+  - [Pré-requisitos](#pré-requisitos)
+  - [Compilação](#compilação)
 - [Desempenho do Sistema](#desempenho-do-sistema)
+  - [Tempo de Execução](#tempo-de-execução)
+  - [Uso de Memória](#uso-de-memória)
 - [Considerações Finais](#considerações-finais)
-- [Autor](#autor)
 
 ## Descrição do Projeto
 
