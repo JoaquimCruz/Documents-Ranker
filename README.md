@@ -115,8 +115,6 @@ Para compilar e rodar o código usando MakeFile, basta seguir os seguintes coman
 |  make run            | Executa o programa da pasta build após a realização da compilação                                     |
 |make r| Faz os três processos descritos acima em apenas um comando|
 
-3. O servidor estará acessível em http://localhost:9080.
-
 ## Desempenho do Sistema
 
 ### Tempo de Execução
