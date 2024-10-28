@@ -28,6 +28,7 @@ Este projeto implementa um sistema de ranqueamento de documentos utilizando o al
   - [Tempo de Execução](#tempo-de-execução)
   - [Uso de Memória](#uso-de-memória)
 - [Considerações Finais](#considerações-finais)
+- [Autores](#autores)
 
 ## Descrição do Projeto
 
@@ -215,3 +216,15 @@ https://www.gutenberg.org/files/1342/1342-0.txt
 
 Este sistema oferece uma aplicação prática do cálculo de relevância com TF-IDF em documentos textuais, utilizando cURL para download, SQLite para armazenamento e Pistache para integração com o frontend. Estruturas de dados como `std::unordered_map` e `std::vector` oferecem acesso rápido e eficiente para manipulação de dados. Melhorias futuras podem incluir o uso de árvores de busca e grafos para refinar o desempenho e agregar funcionalidades.
 
+## Autores
+<p>
+  Joaquim Cézar Santana da Cruz - Graduando em Engenharia da Computação pelo <a href="https://www.cefetmg.br" target="_blank">CEFET-MG</a>. Contato: (<a href="mailto:joaquim.cruz@aluno.cefetmg.br">joaquim.cruz@aluno.cefetmg.br</a>)
+</p>
+
+<p>
+  Lucas Cerqueira Portela - Graduando em Engenharia da Computação pelo <a href="https://www.cefetmg.br" target="_blank">CEFET-MG</a>. Contato: (<a href="mailto:lucas.portela@aluno.cefetmg.br">lucas.portela@aluno.cefetmg.br</a>)
+</p>
+
+<p>
+  João Francisco Teles da Silva - Graduando em Engenharia da Computação pelo <a href="https://www.cefetmg.br" target="_blank">CEFET-MG</a>. Contato: (<a href="mailto:joao.silva.05@aluno.cefetmg.br">joao.silva.05@aluno.cefetmg.br</a>)
+</p>
