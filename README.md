@@ -1,6 +1,12 @@
 # Sistema de Ranqueamento de Documentos com TF-IDF
+<div style="display: inline-block;">
+<img align="center" height="20px" width="60px" src="https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white"/> 
+<img align="center" height="20px" width="80px" src="https://img.shields.io/badge/Made%20for-VSCode-1f425f.svg"/> 
+</a> 
+</div>
 
 Este projeto implementa um sistema de ranqueamento de documentos utilizando o algoritmo **TF-IDF (Term Frequency - Inverse Document Frequency)** em C++. A aplicação permite que o usuário baixe conteúdo de livros a partir de URLs fornecidas, armazene-os em um banco de dados SQLite, processe o conteúdo para análise e, em seguida, classifique os documentos por relevância em relação a frases de pesquisa. Este projeto explora conceitos fundamentais de Estruturas de Dados e Algoritmos, como listas, filas, tabelas hash e ordenação.
+
 
 ## Sumário
 - [Descrição do Projeto](#descrição-do-projeto)
@@ -17,6 +23,7 @@ Este projeto implementa um sistema de ranqueamento de documentos utilizando o al
 - [Instruções de Compilação e Execução](#instruções-de-compilação-e-execução)
   - [Pré-requisitos](#pré-requisitos)
   - [Compilação](#compilação)
+- [Adição de Livros ao Banco de Dados](#adição-de-livros-ao-banco-de-dados)
 - [Desempenho do Sistema](#desempenho-do-sistema)
   - [Tempo de Execução](#tempo-de-execução)
   - [Uso de Memória](#uso-de-memória)
@@ -187,6 +194,12 @@ Para compilar e rodar o código usando MakeFile, basta seguir os seguintes coman
 |  make                | Executa a compilação do programa utilizando o gcc, e o resultado vai para a pasta build               |
 |  make run            | Executa o programa da pasta build após a realização da compilação                                     |
 |make r| Faz os três processos descritos acima em apenas um comando|
+## Adição de Livros ao Banco de Dados
+Este projeto utiliza livros da [biblioteca digital Projeto Gutenberg](https://www.gutenberg.org/), que possui mais de 70.000 livros em seu acervo. Para adicioná-los ao banco de dados, selecione dentro do site a opção de arquivo de texto simples (Plain Text UTF-8). A seguir, será exemplificado qual será a URL a ser usada no código:
+```Markdown
+# Url do livro Orgulho e Preconceito
+https://www.gutenberg.org/files/1342/1342-0.txt
+```
 
 ## Desempenho do Sistema
 
