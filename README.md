@@ -123,7 +123,7 @@ Outra estrutura avançada que poderia melhorar a organização e análise dos do
    - Técnicas de análise de grafos, como **busca em largura** (BFS) ou **busca em profundidade** (DFS), podem ser aplicadas para explorar documentos relacionados de maneira mais eficiente e sofisticada.
 
 3. **Aplicação**:
-   - Cada vez que uma análise TF-IDF é realizada, o grafo pode ser atualizado com arestas ponderadas entre documentos relacionados. Isso facilita a visualização e a recuperação de documentos semelhantes ou relevantes para um conjunto de termos.
+   - Cada vez que uma analise TF-IDF é realizada, o grafo pode ser atualizado com arestas ponderadas entre documentos relacionados. Isso facilita a visualização e a recuperação de documentos semelhantes ou relevantes para um conjunto de termos.
 
 #### Estrutura Proposta de Grafo
 
