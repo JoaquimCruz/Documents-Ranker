@@ -214,7 +214,7 @@ https://www.gutenberg.org/files/1342/1342-0.txt
 
 ## Considerações Finais
 
-Este sistema oferece uma aplicação prática do cálculo de relevância com TF-IDF em documentos textuais, utilizando cURL para download, SQLite para armazenamento e Pistache para integração com o frontend. Estruturas de dados como `std::unordered_map` e `std::vector` oferecem acesso rápido e eficiente para manipulação de dados. Melhorias futuras podem incluir o uso de árvores de busca e grafos para refinar o desempenho e agregar funcionalidades.
+Este sistema oferece uma aplicação prática do cálculo de relevância com TF-IDF em documentos textuais, utilizando cURL para download e SQLite para armazenamento. Estruturas de dados como `std::unordered_map` e `std::vector` oferecem acesso rápido e eficiente para manipulação de dados. Melhorias futuras podem incluir o uso de árvores de busca e grafos para refinar o desempenho e agregar funcionalidades.
 
 ## Autores
 <p>
